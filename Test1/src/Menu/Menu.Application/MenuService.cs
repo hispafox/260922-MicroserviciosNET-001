@@ -16,7 +16,7 @@ public class MenuService
         if (!validationResult.IsValid)
             throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
 
-        var e = new MenuItem { Name = cmd.Name, Price = cmd.Price, Stock = cmd.Stock };
+        var e = cmd.ToEntity();
         
         await _uow.MenuItemRepository.AddAsync(e, ct);
         await _uow.SaveChangesAsync(ct);
@@ -32,7 +32,7 @@ public class MenuService
             throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
 
         var e = await _uow.MenuItemRepository.GetByIdAsync(id, ct) ?? throw new KeyNotFoundException();
-        e.Name = cmd.Name; e.Price = cmd.Price; e.Stock = cmd.Stock; e.UpdatedAt = DateTimeOffset.UtcNow;
+        cmd.ApplyUpdate(e);
         _uow.MenuItemRepository.Update(e); await _uow.SaveChangesAsync(ct);
     }
 }
