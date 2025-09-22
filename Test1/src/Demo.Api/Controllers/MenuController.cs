@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Menu.Domain.Abstractions;
 using Menu.Application;
+using Asp.Versioning;
 
 namespace Demo.Api.Controllers;
 
