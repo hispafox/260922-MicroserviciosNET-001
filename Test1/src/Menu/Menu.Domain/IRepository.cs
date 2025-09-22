@@ -1,6 +1,5 @@
-﻿using System.Linq;
+﻿namespace Menu.Domain.Abstractions;
 
-namespace Menu.Domain.Abstractions;
 public interface IRepository<T> where T : class
 {
     Task<T?> GetByIdAsync(object id, CancellationToken ct = default);
@@ -8,9 +7,4 @@ public interface IRepository<T> where T : class
     void Update(T entity);
     void Remove(T entity);
     IQueryable<T> Query();
-}
-public interface IUnitOfWork
-{
-    IRepository<Menu.Domain.Entities.MenuItem> MenuItems { get; }
-    Task<int> SaveChangesAsync(CancellationToken ct = default);
 }
