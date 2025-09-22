@@ -1,4 +1,7 @@
-﻿using Menu.Domain.Abstractions;
+﻿using System;
+using System.Linq;
+using FluentValidation;
+using Menu.Domain.Abstractions;
 using Menu.Domain.Entities;
 
 namespace Menu.Application;
@@ -8,9 +11,10 @@ public class MenuService
     public MenuService(IUnitOfWork uow) => _uow = uow;
     public async Task<int> CreateAsync(CreateMenuItem cmd, CancellationToken ct)
     {
-
-        //if (cmd.Price <= 0) throw new ArgumentException("Precio inválido");
-
+        var validator = new CreateMenuItemValidator();
+        var validationResult = validator.Validate(cmd);
+        if (!validationResult.IsValid)
+            throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
 
         var e = new MenuItem { Name = cmd.Name, Price = cmd.Price, Stock = cmd.Stock };
         
@@ -22,8 +26,12 @@ public class MenuService
     }
     public async Task UpdateAsync(int id, UpdateMenuItem cmd, CancellationToken ct)
     {
+        var validator = new UpdateMenuItemValidator();
+        var validationResult = validator.Validate(cmd);
+        if (!validationResult.IsValid)
+            throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
+
         var e = await _uow.MenuItemRepository.GetByIdAsync(id, ct) ?? throw new KeyNotFoundException();
-        if (cmd.Price <= 0) throw new ArgumentException("Precio inválido");
         e.Name = cmd.Name; e.Price = cmd.Price; e.Stock = cmd.Stock; e.UpdatedAt = DateTimeOffset.UtcNow;
         _uow.MenuItemRepository.Update(e); await _uow.SaveChangesAsync(ct);
     }
