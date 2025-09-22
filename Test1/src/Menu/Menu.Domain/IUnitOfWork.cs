@@ -3,6 +3,6 @@
 namespace Menu.Domain.Abstractions;
 public interface IUnitOfWork
 {
-    IRepository<Menu.Domain.Entities.MenuItem> MenuItems { get; }
+    IRepository<Menu.Domain.Entities.MenuItem> MenuItemRepository { get; }
     Task<int> SaveChangesAsync(CancellationToken ct = default);
 }

@@ -20,7 +20,7 @@ public class MenuController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<MenuItemDto>>> Get(int page = 1, int size = 20, CancellationToken ct = default)
     {
-        var q = _uow.MenuItems.Query().OrderBy(x => x.Name).Skip((page - 1) * size).Take(size);
+        var q = _uow.MenuItemRepository.Query().OrderBy(x => x.Name).Skip((page - 1) * size).Take(size);
         var items = await q.Select(i => new MenuItemDto(i.Id, i.Name, i.Price, i.Stock)).ToListAsync(ct);
         return Ok(items);
     }
@@ -29,7 +29,7 @@ public class MenuController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<MenuItemDto>> GetById(int id, CancellationToken ct)
     {
-        var i = await _uow.MenuItems.GetByIdAsync(id, ct);
+        var i = await _uow.MenuItemRepository.GetByIdAsync(id, ct);
         return i is null ? NotFound() : Ok(new MenuItemDto(i.Id, i.Name, i.Price, i.Stock));
     }
 
@@ -53,9 +53,9 @@ public class MenuController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Delete(int id, CancellationToken ct)
     {
-        var e = await _uow.MenuItems.GetByIdAsync(id, ct);
+        var e = await _uow.MenuItemRepository.GetByIdAsync(id, ct);
         if (e is null) return NotFound();
-        _uow.MenuItems.Remove(e); await _uow.SaveChangesAsync(ct);
+        _uow.MenuItemRepository.Remove(e); await _uow.SaveChangesAsync(ct);
         return NoContent();
     }
 }
