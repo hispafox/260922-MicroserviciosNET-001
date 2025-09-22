@@ -1,5 +1,6 @@
 ﻿using Menu.Domain.Abstractions;
 using Menu.Domain.Entities;
+using Menu.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Menu.Infrastructure.Persistence;
@@ -19,7 +20,13 @@ public class MenuItemRepository : EfRepository<MenuItem>, IMenuItemRepository
 {
     public MenuItemRepository(MenuDbContext db) : base(db) {}
 
-    public async Task<MenuItem?> GetByIdAsync(object id, CancellationToken ct = default) => await base.GetByIdAsync(id, ct);
+    public async Task<MenuItem> GetByIdAsync(object id, CancellationToken ct = default)
+    {
+        var item = await base.GetByIdAsync(id, ct);
+        if (item == null)
+            throw new EntityNotFoundException(nameof(MenuItem), id);
+        return item;
+    }
     public async Task AddAsync(MenuItem e, CancellationToken ct = default) => await base.AddAsync(e, ct);
     public void Update(MenuItem e) => base.Update(e);
     public void Remove(MenuItem e) => base.Remove(e);
