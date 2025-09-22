@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using MassTransit;
 using Orders.Application;
 using Integration.Contracts;
+using Asp.Versioning;
 
 namespace Demo.Api.Controllers;
 
