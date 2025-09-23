@@ -190,6 +190,23 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<AnalyticsDbContext>().Database.Migrate();
 }
 
+var configuration = app.Services.GetRequiredService<IConfiguration>();
+bool crearDirecto = configuration.GetValue<bool>("Database:CreateDirecto");
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<MenuDbContext>();
+
+    if (crearDirecto)
+    {
+        dbContext.Database.EnsureCreated();
+    }
+    else
+    {
+        dbContext.Database.Migrate();
+    }
+}
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

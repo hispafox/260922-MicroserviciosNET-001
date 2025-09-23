@@ -82,6 +82,62 @@ public class EfRepository<T> : IRepository<T> where T : class
             PageSize = size
         };
     }
+
+    public async Task<PagedTokenResult<T>> GetPagedTokenAsync(string? token, int size, string? filter = null, CancellationToken ct = default)
+    {
+        var query = _db.Set<T>().AsNoTracking().AsQueryable();
+        var type = typeof(T);
+        var idProp = type.GetProperty("Id");
+        if (idProp == null)
+            throw new InvalidOperationException($"Token paging requires an 'Id' property on {type.Name}");
+
+        // Filtrado dinámico por Name y Description si existen
+        if (!string.IsNullOrEmpty(filter))
+        {
+            var nameProp = type.GetProperty("Name");
+            var descProp = type.GetProperty("Description");
+            if (nameProp != null || descProp != null)
+            {
+                query = query.Where(e =>
+                    (nameProp != null && EF.Functions.Like(EF.Property<string>(e, "Name"), $"%{filter}%")) ||
+                    (descProp != null && EF.Functions.Like(EF.Property<string>(e, "Description"), $"%{filter}%"))
+                );
+            }
+        }
+
+        int? lastId = null;
+        if (!string.IsNullOrEmpty(token))
+        {
+            // Decodifica el token (base64 de Id)
+            try
+            {
+                var idStr = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(token));
+                if (int.TryParse(idStr, out var id))
+                    lastId = id;
+            }
+            catch { /* token inválido, ignora y empieza desde el principio */ }
+        }
+        if (lastId.HasValue)
+        {
+            query = query.Where(e => EF.Property<int>(e, "Id") > lastId.Value);
+        }
+        query = query.OrderBy(e => EF.Property<int>(e, "Id"));
+
+        var items = await query.Take(size).ToListAsync(ct);
+        string? nextToken = null;
+        if (items.Count > 0)
+        {
+            // Genera el token para la siguiente página (base64 del último Id)
+            var nextId = (int)idProp.GetValue(items.Last())!;
+            nextToken = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(nextId.ToString()));
+        }
+        return new PagedTokenResult<T>
+        {
+            Items = items,
+            NextToken = nextToken,
+            PageSize = size
+        };
+    }
 }
 
 public class MenuItemRepository : EfRepository<MenuItem>, IMenuItemRepository
