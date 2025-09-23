@@ -1,1 +1,1 @@
-﻿dotnet ef migrations add InitialCreate --startup-project src/Demo.Api/Demo.Api.csproj  --project src/Menu/Menu.Infrastructure/Menu.Infrastructure.csproj  --context MenuDbContext
+﻿dotnet ef migrations add AuditoriaMenuItemsNulos --startup-project src/Demo.Api/Demo.Api.csproj  --project src/Menu/Menu.Infrastructure/Menu.Infrastructure.csproj  --context MenuDbContext

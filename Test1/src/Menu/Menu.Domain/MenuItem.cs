@@ -11,8 +11,8 @@ public class MenuItem(int id, string name, decimal price, int stock, DateTimeOff
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; } = price;
     public int Stock { get; set; } = stock;
-    public DateTimeOffset CreatedAt { get; set; } = createdAt;
-    public DateTimeOffset UpdatedAt { get; set; } = updatedAt;
+    public DateTimeOffset? CreatedAt { get; set; } = createdAt;
+    public DateTimeOffset? UpdatedAt { get; set; } = updatedAt;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
