@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Menu.Domain.Exceptions;
 
 namespace Menu.Domain.Entities;
 public class MenuItem(int id, string name, decimal price, int stock, DateTimeOffset updatedAt) : IValidatableObject
@@ -27,6 +28,26 @@ public class MenuItem(int id, string name, decimal price, int stock, DateTimeOff
 
         if (UpdatedAt > DateTimeOffset.UtcNow)
             yield return new ValidationResult("La fecha de actualización no puede ser futura", new[] { nameof(UpdatedAt) });
+    }
+
+    // Método de negocio para actualizar el precio
+    public void ActualizarPrecio(decimal nuevoPrecio)
+    {
+        if (nuevoPrecio <= 0)
+            throw new InvalidPriceException(nuevoPrecio);
+        Price = nuevoPrecio;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    // Método de negocio para descontar stock
+    public void DescontarStock(int cantidad)
+    {
+        if (cantidad <= 0)
+            throw new ArgumentException("La cantidad debe ser mayor a cero.", nameof(cantidad));
+        if (Stock - cantidad < 0)
+            throw new InvalidOperationException("No hay suficiente stock para descontar la cantidad solicitada.");
+        Stock -= cantidad;
+        UpdatedAt = DateTimeOffset.UtcNow;
     }
 }
 
