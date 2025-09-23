@@ -90,8 +90,21 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(o =>
 builder.Services.AddAuthorization();
 
 // Controllers + Versioning + Swagger
-builder.Services.AddControllers();
-builder.Services.AddApiVersioning(o => { o.AssumeDefaultVersionWhenUnspecified = true; o.DefaultApiVersion = new ApiVersion(1, 0); o.ReportApiVersions = true; });
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),     // /api/v1/products
+        new QueryStringApiVersionReader(),    // ?version=1.0
+        new HeaderApiVersionReader("X-Version") // Header: X-Version: 1.0
+    );
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
