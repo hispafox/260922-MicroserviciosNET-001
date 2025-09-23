@@ -2,14 +2,15 @@
 using Menu.Domain.Exceptions;
 
 namespace Menu.Domain.Entities;
-public class MenuItem(int id, string name, decimal price, int stock, DateTimeOffset updatedAt) : IValidatableObject
+public class MenuItem(int id, string name, decimal price, int stock, DateTimeOffset createdAt, DateTimeOffset updatedAt) : IValidatableObject, IAuditableEntity
 {
-    public MenuItem() : this(0, "", 0m, 0, DateTimeOffset.UtcNow) {}
+    public MenuItem() : this(0, "", 0m, 0, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow) {}
 
     public int Id { get; set; } = id;
     public string Name { get; set; } = name;
     public decimal Price { get; set; } = price;
     public int Stock { get; set; } = stock;
+    public DateTimeOffset CreatedAt { get; set; } = createdAt;
     public DateTimeOffset UpdatedAt { get; set; } = updatedAt;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -23,4 +23,29 @@ public class MenuDbContext : DbContext
                 .EnableDetailedErrors();
         }
     }
+
+    // Auditing automático de timestamps
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamps();
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void UpdateTimestamps()
+    {
+        var entries = ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            if (entry.Entity is IAuditableEntity auditableEntity)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    auditableEntity.CreatedAt = DateTimeOffset.UtcNow;
+                }
+                auditableEntity.UpdatedAt = DateTimeOffset.UtcNow;
+            }
+        }
+    }
 }
