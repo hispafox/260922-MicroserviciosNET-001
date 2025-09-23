@@ -8,6 +8,7 @@ public class MenuItem(int id, string name, decimal price, int stock, DateTimeOff
 
     public int Id { get; set; } = id;
     public string Name { get; set; } = name;
+    public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; } = price;
     public int Stock { get; set; } = stock;
     public DateTimeOffset CreatedAt { get; set; } = createdAt;

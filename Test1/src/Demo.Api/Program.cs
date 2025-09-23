@@ -42,16 +42,81 @@ using Analytics.Application;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuración de cadenas (appsettings.json se crea más abajo)
-builder.Services.AddDbContext<AppIdentityDb>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
+bool isDevelopment = builder.Environment.IsDevelopment();
+
+builder.Services.AddDbContext<AppIdentityDb>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Identity"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDb>().AddDefaultTokenProviders();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-builder.Services.AddDbContext<MenuDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Menu")));
-builder.Services.AddDbContext<OrdersDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Orders")));
-builder.Services.AddDbContext<PaymentsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Payments")));
-builder.Services.AddDbContext<DeliveryDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Delivery")));
-builder.Services.AddDbContext<NotificationsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Notifications")));
-builder.Services.AddDbContext<AnalyticsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Analytics")));
+builder.Services.AddDbContext<MenuDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Menu"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
+builder.Services.AddDbContext<OrdersDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Orders"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
+builder.Services.AddDbContext<PaymentsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Payments"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
+builder.Services.AddDbContext<DeliveryDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Delivery"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
+builder.Services.AddDbContext<NotificationsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Notifications"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
+builder.Services.AddDbContext<AnalyticsDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Analytics"), sqlOptions =>
+{
+    sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(20),
+        errorNumbersToAdd: null);
+    sqlOptions.CommandTimeout(30);
+})
+.EnableServiceProviderCaching()
+.EnableSensitiveDataLogging(isDevelopment));
 
 // DI repos/UoW + servicios
 builder.Services.AddScoped<Menu.Domain.Abstractions.IUnitOfWork, Menu.Infrastructure.Persistence.UnitOfWork>();
