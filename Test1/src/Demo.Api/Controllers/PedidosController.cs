@@ -4,6 +4,7 @@ using MassTransit;
 using Orders.Application;
 using Integration.Contracts;
 using Asp.Versioning;
+using Demo.Api; // Importa ApiResponse
 
 namespace Demo.Api.Controllers;
 
@@ -22,13 +23,25 @@ public class PedidosController : ControllerBase
     {
         var id = await _svc.CreateAsync(cmd, ct);
         await _publish.Publish(new PedidoCreado(id, cmd.Lines.Sum(x => x.Price * x.Quantity)), ct);
-        return CreatedAtAction(nameof(GetById), new { id, version = "1.0" }, null);
+        var response = ApiResponse<object>.SuccessResult(null, "Pedido creado correctamente.");
+        return CreatedAtAction(nameof(GetById), new { id, version = "1.0" }, response);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
         var dto = await _svc.GetByIdAsync(id, ct);
-        return dto is null ? NotFound() : Ok(dto);
+        if (dto is null)
+        {
+            var problem = new ProblemDetails
+            {
+                Title = "Pedido no encontrado",
+                Status = StatusCodes.Status404NotFound,
+                Detail = $"No existe un pedido con id {id}."
+            };
+            return NotFound(problem);
+        }
+        var response = ApiResponse<object>.SuccessResult(dto);
+        return Ok(response);
     }
 }
