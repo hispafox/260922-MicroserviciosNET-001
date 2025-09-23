@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Menu.Domain.Entities;
 using Menu.Infrastructure.Persistence;
 
@@ -11,5 +12,15 @@ public class MenuDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.ApplyConfiguration(new MenuItemConfiguration());
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // Logging y errores detallados solo en desarrollo
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
+        }
     }
 }
