@@ -10,32 +10,37 @@ namespace Demo.Api.Controllers;
 [ApiVersion("1.0")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _users;
-    private readonly SignInManager<IdentityUser> _signIn;
-    private readonly ITokenService _tokens;
-    public AuthController(UserManager<IdentityUser> users, SignInManager<IdentityUser> signIn, ITokenService tokens)
-    { _users = users; _signIn = signIn; _tokens = tokens; }
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly ITokenService _tokenService;
+    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ITokenService tokenService)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _tokenService = tokenService;
+    }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUser cmd)
+    public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        var u = new IdentityUser { UserName = cmd.UserName, Email = cmd.Email };
-        var r = await _users.CreateAsync(u, cmd.Password);
-        if (!r.Succeeded) return BadRequest(r.Errors);
+        var user = new IdentityUser { UserName = request.UserName, Email = request.Email };
+        var result = await _userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded) return BadRequest(result.Errors);
         return Ok();
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUser cmd)
+    public async Task<IActionResult> Login(LoginUserRequest request)
     {
-        var u = await _users.FindByNameAsync(cmd.UserName);
-        if (u is null) return Unauthorized();
-        var ok = await _signIn.CheckPasswordSignInAsync(u, cmd.Password, false);
-        if (!ok.Succeeded) return Unauthorized();
-        var roles = await _users.GetRolesAsync(u);
-        var token = await _tokens.CreateTokenAsync(u.Id, u.UserName!, roles, cmd.Scopes, cmd.Audience);
+        var user = await _userManager.FindByNameAsync(request.UserName);
+        if (user is null) return Unauthorized();
+        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        if (!signInResult.Succeeded) return Unauthorized();
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = await _tokenService.CreateTokenAsync(user.Id, user.UserName!, roles, request.Scopes, request.Audience);
         return Ok(new { access_token = token });
     }
 }
-public record RegisterUser(string UserName, string Email, string Password);
-public record LoginUser(string UserName, string Password, string? Audience, IEnumerable<string> Scopes);
+
+public record RegisterUserRequest(string UserName, string Email, string Password);
+public record LoginUserRequest(string UserName, string Password, string? Audience, IEnumerable<string> Scopes);
