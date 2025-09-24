@@ -38,7 +38,11 @@ public class JwtTokenService : ITokenService
         string? audience = null,
         CancellationToken ct = default)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["Auth:SigningKey"]!)); // Crear una clave simétrica para firmar el token
+        var authority = _cfg["Auth:Authority"];
+        var signingKey = _cfg["Auth:SigningKey"];
+
+        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["Auth:SigningKey"]!)); // Crear una clave simétrica para firmar el token
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["Auth:SigningKey"])); // Crear una clave simétrica para firmar el token
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); // Crear las credenciales de firma utilizando HMAC SHA256
         var claims = new List<Claim> // Crear una lista de claims para el token
         {

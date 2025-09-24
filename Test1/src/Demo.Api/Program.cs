@@ -1,38 +1,51 @@
-﻿using Asp.Versioning;
+﻿using Analytics.Application;
+// Analytics
+using Analytics.Infrastructure.Persistence;
+using Asp.Versioning;
+using Delivery.Application;
+// Delivery
+using Delivery.Infrastructure.Persistence;
+using Identity.Domain.Abstractions;
+// Identity
+using Identity.Infrastructure;
+using Identity.Infrastructure.Security;
 using MassTransit;
+using Menu.Application;
+using Menu.Domain.Abstractions;
+// Menu
+using Menu.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-// Identity
-using Identity.Infrastructure;
-using Identity.Domain.Abstractions;
-using Identity.Infrastructure.Security;
-// Menu
-using Menu.Infrastructure.Persistence;
-using Menu.Domain.Abstractions;
-using Menu.Application;
-// Orders
-using Orders.Infrastructure.Persistence;
-using Orders.Domain.Abstractions;
-using Orders.Application;
-// Payments
-using Payments.Infrastructure.Persistence;
-using Payments.Domain.Abstractions;
-using Payments.Application;
-// Delivery
-using Delivery.Infrastructure.Persistence;
-using Delivery.Application;
+using Notifications.Application;
 // Notifications
 using Notifications.Infrastructure.Persistence;
-using Notifications.Application;
-// Analytics
-using Analytics.Infrastructure.Persistence;
-using Analytics.Application;
+using Orders.Application;
+using Orders.Domain.Abstractions;
+// Orders
+using Orders.Infrastructure.Persistence;
+using Payments.Application;
+using Payments.Domain.Abstractions;
+// Payments
+using Payments.Infrastructure.Persistence;
 // Consumers
 // (PedidoCreadoConsumer, PagoAprobadoConsumer, PagoRechazadoConsumer están en Consumers.cs)
 
+using Serilog; // <-- Añadido para Serilog
+
+// Configura Serilog antes de crear el builder
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .Enrich.FromLogContext()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Reemplaza el logger por defecto por Serilog
+builder.Host.UseSerilog();
 
 // Configuración de cadenas (appsettings.json se crea más abajo)
 bool isDevelopment = builder.Environment.IsDevelopment();
@@ -163,13 +176,23 @@ builder.Services.AddMassTransit(cfg =>
     cfg.UsingInMemory((context, bus) => { bus.ConfigureEndpoints(context); });
 });
 
+
 // Auth demo (JWT)
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(o =>
 {
     o.Authority = builder.Configuration["Auth:Authority"];
     o.TokenValidationParameters.ValidateAudience = false;
+    o.RequireHttpsMetadata = false; // Permite HTTP en desarrollo
+
 });
+
+
+
+
 builder.Services.AddAuthorization();
+
+
+
 
 // Controllers + Versioning + Swagger
 builder.Services.AddControllers(options =>
@@ -177,7 +200,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 });
 
-builder.Services.AddApiVersioning();
+
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -190,6 +213,8 @@ builder.Services.AddApiVersioning(options =>
         new HeaderApiVersionReader("X-Version") // Header: X-Version: 1.0
     );
 });
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -280,6 +305,9 @@ app.UseSwaggerUI();
 app.MapControllers();
 app.MapHealthChecks("/health");
 app.Run();
+
+// Asegúrate de cerrar y vaciar los logs al finalizar la app
+Log.CloseAndFlush();
 
 
 

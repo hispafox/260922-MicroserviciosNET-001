@@ -51,7 +51,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<ApiResponse<object>>> CreateMenuItem([FromBody] CreateMenuItem createMenuItemCommand, CancellationToken cancellationToken)
     {
         var newMenuItemId = await _menuService.CreateAsync(createMenuItemCommand, cancellationToken);
