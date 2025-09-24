@@ -176,6 +176,9 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<GlobalExceptionFilter>();
 });
+
+builder.Services.AddApiVersioning();
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -187,6 +190,7 @@ builder.Services.AddApiVersioning(options =>
         new HeaderApiVersionReader("X-Version") // Header: X-Version: 1.0
     );
 });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

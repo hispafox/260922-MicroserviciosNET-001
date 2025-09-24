@@ -13,8 +13,8 @@ public class CreateMenuItemValidator : AbstractValidator<CreateMenuItem>
 
         RuleFor(x => x.Price)
             .NotNull().WithMessage("Precio requerido")
-            .Must(p => p.Value > 0).WithMessage("Precio mayor a cero")
-            .Must(p => p.Value < 10000).WithMessage("Precio menor a 10000");
+            .Must(p => p > 0).WithMessage("Precio mayor a cero")
+            .Must(p => p < 10000).WithMessage("Precio menor a 10000");
 
         RuleFor(x => x.Stock)
             .GreaterThanOrEqualTo(0);

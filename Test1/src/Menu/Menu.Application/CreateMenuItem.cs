@@ -2,4 +2,4 @@
 
 namespace Menu.Application;
 
-public record CreateMenuItem(string Name, Price Price, int Stock);
+public record CreateMenuItem(string Name, decimal Price, int Stock);
