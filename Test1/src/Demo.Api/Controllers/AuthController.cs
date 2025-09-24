@@ -23,7 +23,12 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        var user = new IdentityUser { UserName = request.UserName, Email = request.Email };
+        var user = new IdentityUser {
+            UserName = request.UserName,
+            Email = request.Email,
+            EmailConfirmed = true,
+            LockoutEnabled = false
+        };
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded) return BadRequest(result.Errors);
         return Ok();
