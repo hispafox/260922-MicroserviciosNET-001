@@ -13,8 +13,8 @@ public class MenuService
     {
         var validator = new CreateMenuItemValidator();
         var validationResult = validator.Validate(cmd);
-        if (!validationResult.IsValid)
-            throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
+        //if (!validationResult.IsValid)
+        //    throw new ArgumentException(string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)));
 
         var e = cmd.ToEntity();
         

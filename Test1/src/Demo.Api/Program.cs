@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Notifications.Application;
 // Notifications
 using Notifications.Infrastructure.Persistence;
@@ -33,7 +34,8 @@ using Payments.Infrastructure.Persistence;
 // Consumers
 // (PedidoCreadoConsumer, PagoAprobadoConsumer, PagoRechazadoConsumer están en Consumers.cs)
 
-using Serilog; // <-- Añadido para Serilog
+using Serilog;
+using System.Text; // <-- Añadido para Serilog
 
 // Configura Serilog antes de crear el builder
 Log.Logger = new LoggerConfiguration()
@@ -177,19 +179,43 @@ builder.Services.AddMassTransit(cfg =>
 });
 
 
-// Auth demo (JWT)
-builder.Services.AddAuthentication("Bearer").AddJwtBearer(o =>
+//// Auth demo (JWT)
+//builder.Services.AddAuthentication("Bearer").AddJwtBearer(o =>
+//{
+//    o.Authority = builder.Configuration["Auth:Authority"];
+//    o.TokenValidationParameters.ValidateAudience = false;
+//    o.RequireHttpsMetadata = false; // Permite HTTP en desarrollo
+
+//});
+
+
+
+
+//builder.Services.AddAuthorization();
+
+
+
+// Configuración de JWT
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "ThisIsASecretKeyForJWTTokenAndItShouldBeLongEnough";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "https://yourdomain.com";
+builder.Services.AddAuthentication(options =>
 {
-    o.Authority = builder.Configuration["Auth:Authority"];
-    o.TokenValidationParameters.ValidateAudience = false;
-    o.RequireHttpsMetadata = false; // Permite HTTP en desarrollo
-
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
 });
-
-
-
-
-builder.Services.AddAuthorization();
 
 
 
@@ -297,13 +323,20 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+app.UseHttpsRedirection();
+
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.MapControllers();
 app.MapHealthChecks("/health");
+
 app.Run();
 
 // Asegúrate de cerrar y vaciar los logs al finalizar la app

@@ -1,9 +1,11 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Identity.Domain.Abstractions;
+﻿using Identity.Domain.Abstractions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 
 namespace Identity.Infrastructure.Security;
 
@@ -20,6 +22,36 @@ public class JwtTokenService : ITokenService
     /// <param name="cfg">Instancia de <see cref="IConfiguration"/> para acceder a la configuración de la aplicación.</param>
     public JwtTokenService(IConfiguration cfg) => _cfg = cfg;
 
+    public Task<string> CreateTokenAsync(string userId, string userName, IEnumerable<string> roles, IEnumerable<string> scopes, string? audience = null, CancellationToken ct = default)
+    {
+        //var claims = new[]
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        //    }.Union(await _userManager.GetClaimsAsync(user));
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_cfg["Jwt:Key"]));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new List<Claim> // Crear una lista de claims para el token
+        {
+            new(JwtRegisteredClaimNames.Sub, userId),  // Identificador del sujeto (usuario)
+            new(JwtRegisteredClaimNames.UniqueName, userName), // Nombre único del usuario
+            new("scope", string.Join(' ', scopes)) // Scopes autorizados, unidos en una sola cadena separada por espacios
+        };
+
+
+        var token = new JwtSecurityToken(
+            issuer: _cfg["Jwt:Issuer"],
+            audience: _cfg["Jwt:Issuer"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: creds);
+
+     
+        return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
+    }
+
     /// <summary>
     /// Crea un token JWT firmado para un usuario específico.
     /// </summary>
@@ -30,7 +62,7 @@ public class JwtTokenService : ITokenService
     /// <param name="audience">Audiencia del token (opcional).</param>
     /// <param name="ct">Token de cancelación (opcional).</param>
     /// <returns>Una tarea que representa la operación asincrónica. El resultado contiene el token JWT generado como cadena.</returns>
-    public Task<string> CreateTokenAsync(
+    public Task<string> CreateTokenAsync1(
         string userId,
         string userName,
         IEnumerable<string> roles,
