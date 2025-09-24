@@ -228,6 +228,21 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Proceso condicional para AppIdentityDb
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppIdentityDb>();
+
+    if (crearDirecto)
+    {
+        dbContext.Database.EnsureCreated();
+    }
+    else
+    {
+        dbContext.Database.Migrate();
+    }
+}
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

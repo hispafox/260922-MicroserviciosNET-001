@@ -1,0 +1,1 @@
+﻿dotnet ef migrations add Inicial --startup-project src/Demo.Api/Demo.Api.csproj  --project src/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj  --context AppIdentityDb
