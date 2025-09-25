@@ -34,8 +34,11 @@ using Payments.Infrastructure.Persistence;
 // Consumers
 // (PedidoCreadoConsumer, PagoAprobadoConsumer, PagoRechazadoConsumer están en Consumers.cs)
 
+using Polly;
+using System.Net.Http;
 using Serilog;
-using System.Text; // <-- Añadido para Serilog
+using System.Text;
+// Elimina: using Microsoft.Extensions.Http
 
 // Configura Serilog antes de crear el builder
 Log.Logger = new LoggerConfiguration()
@@ -190,8 +193,6 @@ builder.Services.AddMassTransit(cfg =>
 //});
 
 
-
-
 //builder.Services.AddAuthorization();
 
 
@@ -217,7 +218,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
-
 
 
 
@@ -274,6 +274,39 @@ builder.Services.AddSwaggerGen(options =>
 // Health (opcional)
 builder.Services.AddHealthChecks();
 
+// Ejemplo moderno de Polly: política de reintentos y circuito abierto para HttpClient
+var retryPolicy = Policy<HttpResponseMessage>
+    .Handle<HttpRequestException>()
+    .OrResult(r => !r.IsSuccessStatusCode)
+    .WaitAndRetryAsync(
+        3,
+        attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+        (outcome, timespan, attempt, context) =>
+        {
+            Log.Warning($"Intento {attempt} fallido. Esperando {timespan.TotalSeconds} segundos.");
+        }
+    );
+
+var circuitBreakerPolicy = Policy<HttpResponseMessage>
+    .Handle<HttpRequestException>()
+    .OrResult(r => !r.IsSuccessStatusCode)
+    .CircuitBreakerAsync(
+        2,
+        TimeSpan.FromSeconds(15)
+    );
+
+builder.Services.AddHttpClient("MenuApi", client =>
+{
+    client.BaseAddress = new Uri("https://menu.api/");
+    client.DefaultRequestHeaders.Add("User-Agent", "Orders.Service/1.0");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+
+
+
+
+
 var app = builder.Build();
 
 // Migraciones en arranque (solo demo)
@@ -298,7 +331,6 @@ bool crearDirecto = configuration.GetValue<bool>("Database:CreateDirecto");
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<MenuDbContext>();
-
     if (crearDirecto)
     {
         dbContext.Database.EnsureCreated();
@@ -313,7 +345,6 @@ using (var scope = app.Services.CreateScope())
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppIdentityDb>();
-
     if (crearDirecto)
     {
         dbContext.Database.EnsureCreated();
@@ -324,20 +355,14 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseSwagger();
 app.UseSwaggerUI();
-
 app.MapControllers();
 app.MapHealthChecks("/health");
-
 app.Run();
 
 // Asegúrate de cerrar y vaciar los logs al finalizar la app
