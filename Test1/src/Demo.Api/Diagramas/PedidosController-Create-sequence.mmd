@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant Cliente
+    participant PedidosController
+    participant OrdersService
+    participant IPublishEndpoint
+    participant PedidoCreadoConsumer
+    participant PaymentsService
+    participant AnalyticsService
+    participant NotificationsService
+    participant PagoAprobadoConsumer
+    participant DeliveryService
+    participant PagoRechazadoConsumer
+
+    Cliente->>PedidosController: POST /pedidos (CreateOrder)
+    PedidosController->>OrdersService: CreateAsync(cmd)
+    OrdersService-->>PedidosController: id (nuevo pedido)
+    PedidosController->>IPublishEndpoint: Publish(PedidoCreado)
+    IPublishEndpoint->>PedidoCreadoConsumer: Consume(PedidoCreado)
+    PedidoCreadoConsumer->>AnalyticsService: OnOrderCreated
+    PedidoCreadoConsumer->>NotificationsService: AddAsync (INFO)
+    PedidoCreadoConsumer->>PaymentsService: AuthorizeAsync
+    alt Pago aprobado
+        PedidoCreadoConsumer->>IPublishEndpoint: Publish(PagoAprobado)
+        IPublishEndpoint->>PagoAprobadoConsumer: Consume(PagoAprobado)
+        PagoAprobadoConsumer->>DeliveryService: AssignAsync
+        PagoAprobadoConsumer->>AnalyticsService: OnPaymentUpdated (true)
+        PagoAprobadoConsumer->>NotificationsService: AddAsync (SUCCESS)
+        PagoAprobadoConsumer->>IPublishEndpoint: Publish(PedidoListoParaReparto)
+    else Pago rechazado
+        PedidoCreadoConsumer->>IPublishEndpoint: Publish(PagoRechazado)
+        IPublishEndpoint->>PagoRechazadoConsumer: Consume(PagoRechazado)
+        PagoRechazadoConsumer->>AnalyticsService: OnPaymentUpdated (false)
+        PagoRechazadoConsumer->>NotificationsService: AddAsync (ERROR)
+    end

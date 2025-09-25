@@ -188,3 +188,164 @@ Tags:
   user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
   http.route: api/v{version}/menu-client
 ----------------------------------------
+Span: GET
+TraceId: 58277baa3a52dbb485c7aa62b7800526
+SpanId: 36d762efe5334ab8
+Start: 25/09/2025 11:31:56
+Duration: 00:00:00.1310765
+Status: Unset
+StatusDescription: 
+Tags:
+  http.request.method: GET
+  server.address: localhost
+  url.full: http://localhost:58456/2fd03df0c80242b7a129cecdd027fe82/getScriptTag
+  network.protocol.version: 1.1
+----------------------------------------
+Span: GET
+TraceId: 58277baa3a52dbb485c7aa62b7800526
+SpanId: 2a319b8d206532f6
+Start: 25/09/2025 11:31:56
+Duration: 00:00:00.4344724
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: c150cbc86f57ff9a56d26c3981b0f23e
+SpanId: 736ca78f09891913
+Start: 25/09/2025 11:31:56
+Duration: 00:00:00.0089876
+Status: Unset
+StatusDescription: 
+Tags:
+  http.request.method: GET
+  server.address: localhost
+  url.full: http://localhost:58456/2fd03df0c80242b7a129cecdd027fe82/getScriptTag
+  network.protocol.version: 1.1
+----------------------------------------
+Span: GET
+TraceId: c150cbc86f57ff9a56d26c3981b0f23e
+SpanId: f5232aa76fcae3c0
+Start: 25/09/2025 11:31:56
+Duration: 00:00:00.3042325
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/index.html
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 2ceb42eda97dd09a790eb24963b88f65
+SpanId: 625af7082c57fcd2
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.0818563
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /_framework/aspnetcore-browser-refresh.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 0b2580c2fc83e6981b75d2db33a7deb1
+SpanId: 1218ff86cd28d5c0
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.1327245
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui-standalone-preset.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 68b2ed52e249e268109802179842875b
+SpanId: fdf29ae6950b1c5b
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.1314218
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui.css
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: a251fc7a23ab58e4788363aebcd99866
+SpanId: 09ed7af39997f59f
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.2722961
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /_vs/browserLink
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 24878b9367599b2e9c9f67ac7715d229
+SpanId: 65cd2d3367c9749a
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.5194915
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui-bundle.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 04f5304ee6dc801028c8ebcbbb673fd2
+SpanId: f015f44480614534
+Start: 25/09/2025 11:31:58
+Duration: 00:00:00.0023866
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/favicon-32x32.png
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: f888fc4d46554175459b1e2bd3cfe14e
+SpanId: c1ac2767e830aa1a
+Start: 25/09/2025 11:31:57
+Duration: 00:00:00.6607370
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/v1/swagger.json
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------

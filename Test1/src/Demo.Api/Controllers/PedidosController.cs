@@ -18,7 +18,7 @@ public class PedidosController : ControllerBase
     public PedidosController(OrdersService svc, IPublishEndpoint publish) { _svc = svc; _publish = publish; }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> Create(CreateOrder cmd, CancellationToken ct)
     {
         var id = await _svc.CreateAsync(cmd, ct);
