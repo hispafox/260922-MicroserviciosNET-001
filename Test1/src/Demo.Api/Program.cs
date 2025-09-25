@@ -41,6 +41,7 @@ using System.Text; // <-- Añadido para Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
     .Enrich.FromLogContext()
+    .WriteTo.Console() // <-- Salida a la consola
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
