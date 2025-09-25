@@ -26,6 +26,8 @@ public class MenuController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<IEnumerable<MenuItemDto>>>> GetMenuItems(int page = 1, int size = 20, CancellationToken cancellationToken = default)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         var menuItemsQuery = _unitOfWork.MenuItemRepository.Query()
             .OrderBy(menuItem => menuItem.Name)
             .Skip((page - 1) * size)
@@ -42,6 +44,8 @@ public class MenuController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<ApiResponse<MenuItemDto>>> GetMenuItemById(int id, CancellationToken cancellationToken)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         var menuItem = await _unitOfWork.MenuItemRepository.GetByIdAsync(id, cancellationToken);
         if (menuItem is null)
             return NotFound(ApiResponse<MenuItemDto>.ErrorResult($"Menu item with id {id} not found."));
@@ -54,6 +58,8 @@ public class MenuController : ControllerBase
     //[Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<ApiResponse<object>>> CreateMenuItem([FromBody] CreateMenuItem createMenuItemCommand, CancellationToken cancellationToken)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         var newMenuItemId = await _menuService.CreateAsync(createMenuItemCommand, cancellationToken);
         return CreatedAtAction(nameof(GetMenuItemById), new { id = newMenuItemId, version = "1.0" }, ApiResponse<object>.SuccessResult(null, "Menu item created successfully."));
     }
@@ -62,6 +68,8 @@ public class MenuController : ControllerBase
     //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> UpdateMenuItem(int id, UpdateMenuItem updateMenuItemCommand, CancellationToken cancellationToken)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         await _menuService.UpdateAsync(id, updateMenuItemCommand, cancellationToken);
         return Ok(ApiResponse<object>.SuccessResult(null, "Menu item updated successfully."));
     }
@@ -70,6 +78,8 @@ public class MenuController : ControllerBase
     //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> DeleteMenuItem(int id, CancellationToken cancellationToken)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         var menuItem = await _unitOfWork.MenuItemRepository.GetByIdAsync(id, cancellationToken);
         if (menuItem is null)
             return NotFound(ApiResponse<object>.ErrorResult($"Menu item with id {id} not found."));
@@ -82,6 +92,8 @@ public class MenuController : ControllerBase
     //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> PatchMenuItem(int id, [FromBody] JsonPatchDocument<Menu.Domain.Entities.MenuItem> patchDoc, CancellationToken cancellationToken)
     {
+        var correlationId = Request.Headers["x-correlation-id"].FirstOrDefault();
+
         if (patchDoc == null)
             return BadRequest(ApiResponse<object>.ErrorResult("Invalid patch document."));
 

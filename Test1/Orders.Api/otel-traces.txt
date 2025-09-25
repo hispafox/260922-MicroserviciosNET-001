@@ -1,0 +1,190 @@
+﻿Span: GET
+TraceId: b21b5da20a28952b1b3656a471808c72
+SpanId: 8c73329e0811a48a
+Start: 25/09/2025 10:59:07
+Duration: 00:00:00.1230530
+Status: Unset
+StatusDescription: 
+Tags:
+  http.request.method: GET
+  server.address: localhost
+  url.full: http://localhost:58456/2fd03df0c80242b7a129cecdd027fe82/getScriptTag
+  network.protocol.version: 1.1
+----------------------------------------
+Span: GET
+TraceId: b21b5da20a28952b1b3656a471808c72
+SpanId: 5033281958e74908
+Start: 25/09/2025 10:59:07
+Duration: 00:00:00.4668957
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 96c9d75c4a42a38983db1827dd770c68
+SpanId: b273933bf0f8a54f
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.0301675
+Status: Unset
+StatusDescription: 
+Tags:
+  http.request.method: GET
+  server.address: localhost
+  url.full: http://localhost:58456/2fd03df0c80242b7a129cecdd027fe82/getScriptTag
+  network.protocol.version: 1.1
+----------------------------------------
+Span: GET
+TraceId: 96c9d75c4a42a38983db1827dd770c68
+SpanId: 175f5a23c3475dfd
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.4476439
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/index.html
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: c9a61328d35eea839fb54a8dc12d9789
+SpanId: 05c2dd7b4c5658ca
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.0673838
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /_framework/aspnetcore-browser-refresh.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: fdf80dc3c5b8e73b1f6126e6b986f306
+SpanId: c75799e0567b3232
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.2527845
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui.css
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 36fd150a7b4bb79a193f54d3d49d3249
+SpanId: ee957660789510ac
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.2523905
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui-standalone-preset.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: c5f0d35c6e20a9f449041b3b0072eddc
+SpanId: 41ffc3f5c88891db
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.4269268
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /_vs/browserLink
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 31e97f5e639772a8189c1460dc0e4517
+SpanId: 1f243b2374f920f2
+Start: 25/09/2025 10:59:08
+Duration: 00:00:00.5719249
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/swagger-ui-bundle.js
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 6043568bc5d19a761babcaf5d2e647ac
+SpanId: 7d80e97a8f122ce0
+Start: 25/09/2025 10:59:09
+Duration: 00:00:00.0010094
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/favicon-32x32.png
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 7e93e706e27a1ecad0ae05bfcb1068aa
+SpanId: 7e3793b87265ad64
+Start: 25/09/2025 10:59:09
+Duration: 00:00:00.1390030
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /swagger/v1/swagger.json
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+----------------------------------------
+Span: GET
+TraceId: 14e314ffd46af1de14c8c2aa49551a2c
+SpanId: 60066e1a877ab61e
+Start: 25/09/2025 10:59:40
+Duration: 00:00:00.4432819
+Status: Unset
+StatusDescription: 
+Tags:
+  http.request.method: GET
+  server.address: localhost
+  url.full: https://localhost:7204/api/v1.0/menu
+  network.protocol.version: 1.1
+----------------------------------------
+Span: GET api/v{version}/menu-client
+TraceId: 14e314ffd46af1de14c8c2aa49551a2c
+SpanId: 3d09cae8ab8d9d75
+Start: 25/09/2025 10:59:40
+Duration: 00:00:00.6491956
+Status: Unset
+StatusDescription: 
+Tags:
+  server.address: localhost
+  http.request.method: GET
+  url.scheme: https
+  url.path: /api/v1/menu-client
+  network.protocol.version: 2
+  user_agent.original: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+  http.route: api/v{version}/menu-client
+----------------------------------------
