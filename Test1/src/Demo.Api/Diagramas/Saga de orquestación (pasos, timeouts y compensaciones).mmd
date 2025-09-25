@@ -1,0 +1,31 @@
+﻿stateDiagram-v2
+direction LR
+[*] --> OrderSubmitted
+OrderSubmitted --> PaymentProcessing : ProcessPaymentCommand
+PaymentProcessing --> StockReserving : PaymentProcessedEvent
+PaymentProcessing --> OrderFailed : PaymentFailedEvent / CancelOrder
+PaymentProcessing --> OrderFailed : PaymentTimeout / CancelPayment + CancelOrder
+
+StockReserving --> ShipmentCreating : StockReservedEvent
+StockReserving --> OrderFailed : StockReservationFailed / RefundPayment + CancelOrder
+StockReserving --> OrderFailed : StockTimeout / CancelOrder
+
+ShipmentCreating --> OrderCompleted : ShipmentCreatedEvent / OrderCompletedEvent
+ShipmentCreating --> OrderFailed : ShipmentFailedEvent / ReleaseStock + RefundPayment + CancelOrder
+
+OrderCompleted --> [*]
+OrderFailed --> [*]
+
+note right of PaymentProcessing
+  Timeout: 5m, reintentos exponenciales
+  Compensación: CancelPayment + CancelOrder
+end note
+
+note right of StockReserving
+  Timeout: 2m
+  Compensación: RefundPayment + CancelOrder
+end note
+
+note right of ShipmentCreating
+  Si falla: ReleaseStock + RefundPayment + CancelOrder
+end note

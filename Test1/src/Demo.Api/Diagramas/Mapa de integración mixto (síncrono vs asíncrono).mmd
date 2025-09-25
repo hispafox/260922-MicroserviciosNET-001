@@ -1,0 +1,40 @@
+﻿flowchart LR
+
+subgraph ClientZone
+  UI[WebMobileUI]
+end
+
+subgraph ApiGateway
+  GW[Gateway]
+end
+
+subgraph CoreServices
+  ORD[OrdersApi]
+  PAY[PaymentsApi]
+  INV[InventoryApi]
+  SHIP[ShippingApi]
+  MENU[MenuApi]
+  NOTI[NotificationsApi]
+  ID[IdentityApi]
+end
+
+subgraph MessagingBus
+  BUS[(Broker)]
+end
+
+UI -->|REST| GW
+GW -->|REST v1| ORD
+GW -->|REST v1| MENU
+GW -->|Auth/JWT| ID
+ORD -->|REST| PAY
+ORD -->|REST| INV
+ORD -->|REST| SHIP
+
+ORD -. OrderSubmitted .-> BUS
+PAY -. PaymentProcessed/Failed .-> BUS
+INV -. StockReserved/Failed .-> BUS
+SHIP -. ShipmentCreated/Failed .-> BUS
+
+BUS -. consume .-> ORD
+BUS -. consume .-> NOTI
+BUS -. consume .-> INV

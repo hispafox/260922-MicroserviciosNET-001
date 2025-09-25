@@ -1,0 +1,44 @@
+﻿sequenceDiagram
+autonumber
+participant UI as UI
+participant GW as API Gateway
+participant ORD as Orders.Api
+participant MENU as Menu.Api
+participant PAY as Payments.Api
+participant INV as Inventory.Api
+participant SHIP as Shipping.Api
+participant BUS as Broker
+
+Note over UI,ORD: Síncrono (REST) en el camino crítico del checkout
+UI->>GW: POST /orders (carrito)
+GW->>ORD: POST /orders (v1)
+
+Note over ORD,MENU: Validación de catálogo y precios vigentes
+ORD->>MENU: GET /menu-items/{id} (precio/activo)
+MENU-->>ORD: 200 OK (datos producto)
+
+Note over ORD,PAY: Autorización/captura del pago
+ORD->>PAY: POST /payments (charge)
+PAY-->>ORD: 200 OK (paymentId)
+
+Note over ORD,INV: Reserva inmediata de stock
+ORD->>INV: POST /inventory/reservations
+INV-->>ORD: 200 OK (reservationId)
+
+Note over ORD,SHIP: Creación de envío (opcional en camino crítico)
+ORD->>SHIP: POST /shipments
+SHIP-->>ORD: 201 Created (shipmentId)
+
+ORD-->>GW: 201 Created (orderId)
+GW-->>UI: 201 Created (confirmación)
+
+Note over ORD,BUS: Asíncrono (pub/sub) para side-effects y proyecciones
+ORD-->>BUS: OrderSubmittedEvent
+PAY-->>BUS: PaymentProcessedEvent
+INV-->>BUS: StockReservedEvent
+SHIP-->>BUS: ShipmentCreatedEvent
+
+Note over BUS,ORD: La Saga orquesta compensaciones en fallos
+Note over BUS,ORD: PaymentFailed -> CancelOrder/CancelPayment
+Note over BUS,ORD: StockReservationFailed -> RefundPayment + CancelOrder
+Note over BUS,ORD: ShipmentFailed -> ReleaseStock + RefundPayment + CancelOrder

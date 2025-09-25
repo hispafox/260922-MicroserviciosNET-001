@@ -1,0 +1,17 @@
+%% Diagrama de relaciones entre servicios
+graph TD
+    DemoApi["Demo.Api (PedidosController)"] --> OrdersApp["Orders.Application (OrdersService)"]
+    OrdersApp --> OrdersInfra["Orders.Infrastructure (IUnitOfWork)"]
+    OrdersInfra --> OrdersDomain["Orders.Domain (OrderRepository)"]
+    DemoApi --> MassTransit["MassTransit (IPublishEndpoint)"]
+    DemoApi --> Integration["Integration.Contracts (PedidoCreado)"]
+    DemoApi --> MenuApp["Menu.Application (MenuService)"]
+    MenuApp --> MenuInfra["Menu.Infrastructure (IUnitOfWork)"]
+    MenuInfra --> MenuDomain["Menu.Domain (MenuItemRepository)"]
+    DemoApi --> IdentityApp["Identity.Application (IdentityService)"]
+    IdentityApp --> IdentityInfra["Identity.Infrastructure (IUnitOfWork)"]
+    IdentityInfra --> IdentityDomain["Identity.Domain (UserRepository)"]
+    DemoApi --> PaymentsApp["Payments.Application (PaymentsService)"]
+    PaymentsApp --> PaymentsInfra["Payments.Infrastructure (IUnitOfWork)"]
+    PaymentsInfra --> PaymentsDomain["Payments.Domain (PaymentRepository)"]
+

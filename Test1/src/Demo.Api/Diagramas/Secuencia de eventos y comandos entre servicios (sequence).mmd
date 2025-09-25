@@ -1,0 +1,33 @@
+﻿sequenceDiagram
+autonumber
+participant Client
+participant OrderSvc as Order Service
+participant Saga as Order Saga Orchestrator
+participant Pay as Payment Service
+participant Stock as Stock Service
+participant Ship as Shipping Service
+participant Bus as Message Broker
+
+Client->>OrderSvc: POST /orders
+OrderSvc-->>Bus: OrderSubmittedEvent
+Bus-->>Saga: OrderSubmittedEvent
+
+Saga-->>Bus: ProcessPaymentCommand
+Bus-->>Pay: ProcessPaymentCommand
+Pay-->>Bus: PaymentProcessedEvent
+Bus-->>Saga: PaymentProcessedEvent
+
+Saga-->>Bus: ReserveStockCommand
+Bus-->>Stock: ReserveStockCommand
+Stock-->>Bus: StockReservedEvent
+Bus-->>Saga: StockReservedEvent
+
+Saga-->>Bus: CreateShipmentCommand
+Bus-->>Ship: CreateShipmentCommand
+Ship-->>Bus: ShipmentCreatedEvent
+Bus-->>Saga: ShipmentCreatedEvent
+Saga-->>Bus: OrderCompletedEvent
+
+note over Saga,Pay: Si PaymentFailed/Timeout -> CancelOrder/CancelPayment
+note over Saga,Stock: Si StockReservationFailed/Timeout -> RefundPayment + CancelOrder
+note over Saga,Ship: Si ShipmentFailed -> ReleaseStock + RefundPayment + CancelOrder

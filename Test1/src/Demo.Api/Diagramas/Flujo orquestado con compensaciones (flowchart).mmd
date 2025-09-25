@@ -1,0 +1,18 @@
+﻿flowchart LR
+  classDef good fill:#e8fff2,stroke:#2e7d32,stroke-width:1px,color:#1b5e20
+  classDef bad fill:#fff0f0,stroke:#c62828,stroke-width:1px,color:#b71c1c
+  classDef step fill:#eef5ff,stroke:#1565c0,stroke-width:1px,color:#0d47a1
+
+  A[OrderSubmitted]:::step --> B{Process Payment}
+  B -- ok --> C[PaymentProcessed]:::good
+  B -- fail --> X1[CancelOrder]:::bad --> XF[OrderFailed]:::bad
+  B -- timeout --> X2[CancelPayment + CancelOrder]:::bad --> XF
+
+  C --> D{Reserve Stock}
+  D -- ok --> E[StockReserved]:::good
+  D -- fail --> Y1[RefundPayment + CancelOrder]:::bad --> YF[OrderFailed]:::bad
+  D -- timeout --> Y2[CancelOrder]:::bad --> YF
+
+  E --> F{Create Shipment}
+  F -- ok --> G[ShipmentCreated]:::good --> H[OrderCompleted]:::good
+  F -- fail --> Z1[ReleaseStock + RefundPayment + CancelOrder]:::bad --> ZF[OrderFailed]:::bad
