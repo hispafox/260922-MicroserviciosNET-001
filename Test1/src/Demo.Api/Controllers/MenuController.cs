@@ -51,7 +51,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     public async Task<ActionResult<ApiResponse<object>>> CreateMenuItem([FromBody] CreateMenuItem createMenuItemCommand, CancellationToken cancellationToken)
     {
         var newMenuItemId = await _menuService.CreateAsync(createMenuItemCommand, cancellationToken);
@@ -59,7 +59,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> UpdateMenuItem(int id, UpdateMenuItem updateMenuItemCommand, CancellationToken cancellationToken)
     {
         await _menuService.UpdateAsync(id, updateMenuItemCommand, cancellationToken);
@@ -67,7 +67,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> DeleteMenuItem(int id, CancellationToken cancellationToken)
     {
         var menuItem = await _unitOfWork.MenuItemRepository.GetByIdAsync(id, cancellationToken);
@@ -79,7 +79,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpPatch("{id:int}")]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<ApiResponse<object>>> PatchMenuItem(int id, [FromBody] JsonPatchDocument<Menu.Domain.Entities.MenuItem> patchDoc, CancellationToken cancellationToken)
     {
         if (patchDoc == null)

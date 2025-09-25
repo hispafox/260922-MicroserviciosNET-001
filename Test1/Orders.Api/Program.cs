@@ -2,7 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddHttpClient(); // Registro necesario para IHttpClientFactory
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Orders.Api.Clients.IMenuClient, Orders.Api.Clients.MenuClient>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
